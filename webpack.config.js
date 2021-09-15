@@ -3,8 +3,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // удаляе�
 
 const path = require('path');
 
-const isDev = false;
+const isDev = process.env.NODE_ENV === 'development';
 const isProduction = !isDev;
+
+console.log({isDev, isProduction})
 
 module.exports = {
     // указываем, где лежат все исходники с которыми работает вебпак
@@ -14,13 +16,16 @@ module.exports = {
     // значение по умолчанию. при запуске вебпака можем указать другую опцию: webpack --mode production
     mode: 'development',
 
+    // точка входа в приложение. можно задать несколько точек входа оъектом
     entry: '/index.js',
 
+    // куда кладём результат работы вебпака
     output: {
         filename: isDev  ? `[name].js` : `[name].[hash].js`,
         path: path.resolve(__dirname, 'dist'),
     },
 
+    // каждый плагин это экземпляр классов. добавляем их через NEW
     plugins: [
         new HTMLWebpackPlugin({
             // template - указали на основе какого хтмл файла ему работать
