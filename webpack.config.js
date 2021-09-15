@@ -26,6 +26,16 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'dist'),
         },
 
+        resolve: {
+            // какие расширения нужно понимать по умолчанию (если не указывать, то есть значение по умолчанию)
+            // например, мы можем не писать '.js' у файлов при импорте
+            extensions: ['.tsx', '.ts', '.js'],
+            // помогает избавиться от большой вложенности в импорте. например, когда стоят много '../../../../../src/Post.js'. теперь мы сможем написать import Post from "src/Post"
+            alias: {
+                'src': path.resolve(__dirname, 'src'),
+            }
+        },
+
         // каждый плагин это экземпляр классов. добавляем их через NEW
         plugins: [
             new HTMLWebpackPlugin({
@@ -38,7 +48,17 @@ module.exports = (env, argv) => {
                 }
             }),
             new CleanWebpackPlugin(),
-        ]
+        ],
+
+        module: {
+            rules: [
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                }
+            ]
+        }
 
     }
 }
