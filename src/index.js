@@ -1,4 +1,4 @@
-import {func1} from 'src/secondFile';
+import {func1} from 'src/typeScriptFile';
 
 console.log(
     func1(7654321)
