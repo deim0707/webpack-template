@@ -5,9 +5,9 @@ const App = () => {
 
     return (
         <p style={{width: '100%'}}>
-            <div style={{textAlign: 'center'}}>
+            <span style={{textAlign: 'center'}}>
                 {exp}
-            </div>
+            </span>
         </p>
     )
 }
