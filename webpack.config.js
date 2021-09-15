@@ -16,7 +16,6 @@ module.exports = (env, argv) => {
         // значение по умолчанию. при запуске вебпака можем указать другую опцию: webpack --mode production
         mode: 'development',
 
-
         // точка входа в приложение. можно задать несколько точек входа оъектом
         entry: '/index.tsx',
 
@@ -25,6 +24,9 @@ module.exports = (env, argv) => {
             filename: isDev  ? `[name].js` : `[name].[hash].js`,
             path: path.resolve(__dirname, 'dist'),
         },
+
+        // source-map позволяет в девтулзах перейти к исходному коду, т.е. не преобразованному
+        devtool: isDev ? 'source-map' : false,
 
         resolve: {
             // какие расширения нужно понимать по умолчанию (если не указывать, то есть значение по умолчанию)
