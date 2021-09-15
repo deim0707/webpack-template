@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = (env, argv) => {
     const isDev = argv.mode === 'development';
-    const isProduction = argv.mode === 'production';
+    const isProduction = !isDev;
     console.log({isDev, isProduction})
 
     return {
