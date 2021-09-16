@@ -13,6 +13,7 @@ const App = () => {
     return (
         <>
             <p style={{width: '100%'}} className={style.par}>
+                <h2>Заголовок</h2>
             <span style={{textAlign: 'center'}} className={`spa ${style.spa}`}>
                 {exp}
             </span>

@@ -7,8 +7,7 @@ const path = require('path');
 
 // функци в зависимости от режиме разработки возвращает шаблон имени файла
 // например, хеши у файлов нам нужны только в режиме продакшен
-// const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[hash].${extension}`;
-const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[contenthash].${extension}`;
+const getFileName = ({isDev, extension}) => isDev ? `[name].${extension}` : `[name].[contenthash:5].${extension}`;
 
 const getStyleLoader = ({isSASS}) => {
     const styleLoader = [
@@ -49,7 +48,7 @@ module.exports = (env, argv) => {
 
         // куда кладём результат работы вебпака
         output: {
-            filename: getFileName(isDev, 'js'),
+            filename: getFileName({isDev, extension: 'js'}),
             path: path.resolve(__dirname, 'dist'),
         },
 
@@ -80,7 +79,7 @@ module.exports = (env, argv) => {
             new CleanWebpackPlugin(),
             // выносит ксс в отдельный файл
             new MiniCSSExtractPlugin({
-                filename: getFileName(isDev, 'css'),
+                filename: getFileName({isDev, extension: 'css'}),
             }),
         ],
 
@@ -100,20 +99,11 @@ module.exports = (env, argv) => {
                     use: getStyleLoader({isSASS: true}),
                 },
                 {
-                    test: /\.(png|jpg|svg|gif)/,
-                    // loader: 'file-loader',
-                    // options: {
-                    //     name: getFileName(isDev, '[ext]')
-                    // }
-                    // ниже равноценный закомментированному выше вариант
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: getFileName(isDev, '[ext]'),
-                            }
-                        }
-                    ]
+                    test: /\.(png|jpg|svg|gif|ttf|woff|woff2|eot)/,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: `assets/${getFileName({isDev, extension: '[ext]'})}`
+                    }
                 },
             ]
         }

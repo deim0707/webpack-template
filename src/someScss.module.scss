@@ -3,7 +3,9 @@ $textColor: yellow;
 .par {
   display: flex;
   justify-content: center;
+  font-family: 'PTSans', sans-serif;
   .spa {
     color: $textColor;
+    font-family: 'OfficinaSerifBoldC', sans-serif;
   }
 }
