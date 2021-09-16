@@ -1,7 +1,13 @@
 const HTMLWebpackPlugin = require('html-webpack-plugin'); // создаёт нам хтмл файл на основе рукописного. с правильно подключенными импортами
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
+const {CleanWebpackPlugin} = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin'); // добавляет стили в отдельный файл, может добавлять кэши
+
 
 const path = require('path');
+
+// функци в зависимости от режиме разработки возвращает шаблон имени файла
+// например, хеши у файлов нам нужны только в режиме продакшен
+const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[hash].${extension}`;
 
 module.exports = (env, argv) => {
     const isDev = argv.mode === 'development';
@@ -21,7 +27,7 @@ module.exports = (env, argv) => {
 
         // куда кладём результат работы вебпака
         output: {
-            filename: isDev  ? `[name].js` : `[name].[hash].js`,
+            filename: getFileName(isDev, 'js'),
             path: path.resolve(__dirname, 'dist'),
         },
 
@@ -50,6 +56,10 @@ module.exports = (env, argv) => {
                 }
             }),
             new CleanWebpackPlugin(),
+            // выносит ксс в отдельный файл
+            new MiniCSSExtractPlugin({
+                filename: getFileName(isDev, 'css'),
+            }),
         ],
 
         module: {
@@ -58,6 +68,21 @@ module.exports = (env, argv) => {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
                     exclude: /node_modules/,
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        MiniCSSExtractPlugin.loader,
+                        'css-loader' //позволяет вебпаку понимать импорты и импортировать ксс
+                    ]
+                },
+                {
+                    test: /\.s[ac]ss$/,
+                    use: [
+                        MiniCSSExtractPlugin.loader,
+                        'css-loader',
+                        'sass-loader',
+                    ]
                 }
             ]
         }

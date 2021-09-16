@@ -1,0 +1,9 @@
+$textColor: yellow;
+
+.par {
+  display: flex;
+  justify-content: center;
+  .spa {
+    color: $textColor;
+  }
+}
