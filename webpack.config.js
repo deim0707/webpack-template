@@ -9,6 +9,27 @@ const path = require('path');
 // например, хеши у файлов нам нужны только в режиме продакшен
 const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[hash].${extension}`;
 
+const getStyleLoader = ({isSASS}) => {
+    const styleLoader = [
+        MiniCSSExtractPlugin.loader,
+        //позволяет вебпаку понимать импорты и импортировать ксс
+        {loader: 'css-loader'},
+
+    ]
+    // если это sass, то добавляем опции хэширования имени класса и сасс-лоадер
+    if(isSASS) {
+        styleLoader[1].options = {
+            modules: {
+                // в случае scss в сборку кладём селектор по хешу
+                localIdentName: '[local][hash:base64:4]'
+            }
+        }
+        styleLoader.push('sass-loader');
+    }
+
+    return styleLoader;
+}
+
 module.exports = (env, argv) => {
     const isDev = argv.mode === 'development';
     const isProduction = !isDev;
@@ -71,26 +92,11 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.css$/,
-                    use: [
-                        MiniCSSExtractPlugin.loader,
-                        'css-loader' //позволяет вебпаку понимать импорты и импортировать ксс
-                    ]
+                    use: getStyleLoader({isSASS: false}),
                 },
                 {
                     test: /\.s[ac]ss$/,
-                    use: [
-                        MiniCSSExtractPlugin.loader,
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: {
-                                    // в случае scss в сборку кладём селектор по хешу
-                                    localIdentName: '[local][hash:base64:4]'
-                                }
-                            }
-                        },
-                        'sass-loader',
-                    ]
+                    use: getStyleLoader({isSASS: true}),
                 }
             ]
         }
