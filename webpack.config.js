@@ -80,7 +80,15 @@ module.exports = (env, argv) => {
                     test: /\.s[ac]ss$/,
                     use: [
                         MiniCSSExtractPlugin.loader,
-                        'css-loader',
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: {
+                                    // в случае scss в сборку кладём селектор по хешу
+                                    localIdentName: '[local][hash:base64:4]'
+                                }
+                            }
+                        },
                         'sass-loader',
                     ]
                 }
