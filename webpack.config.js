@@ -7,7 +7,8 @@ const path = require('path');
 
 // функци в зависимости от режиме разработки возвращает шаблон имени файла
 // например, хеши у файлов нам нужны только в режиме продакшен
-const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[hash].${extension}`;
+// const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[hash].${extension}`;
+const getFileName = (isDev, extension) => isDev ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 
 const getStyleLoader = ({isSASS}) => {
     const styleLoader = [
@@ -97,7 +98,23 @@ module.exports = (env, argv) => {
                 {
                     test: /\.s[ac]ss$/,
                     use: getStyleLoader({isSASS: true}),
-                }
+                },
+                {
+                    test: /\.(png|jpg|svg|gif)/,
+                    // loader: 'file-loader',
+                    // options: {
+                    //     name: getFileName(isDev, '[ext]')
+                    // }
+                    // ниже равноценный закомментированному выше вариант
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: getFileName(isDev, '[ext]'),
+                            }
+                        }
+                    ]
+                },
             ]
         }
 
