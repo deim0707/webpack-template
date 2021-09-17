@@ -3,6 +3,7 @@
 const HTMLWebpackPlugin = require('html-webpack-plugin'); // создаёт нам хтмл файл на основе рукописного. с правильно подключенными импортами
 const {CleanWebpackPlugin} = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin'); // добавляет стили в отдельный файл, может добавлять кэши
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 
 const path = require('path');
@@ -82,6 +83,9 @@ module.exports = (env, argv) => {
             // выносит ксс в отдельный файл
             new MiniCSSExtractPlugin({
                 filename: getFileName({isDev, extension: 'css'}),
+            }),
+            new ESLintPlugin({
+                extensions: ['js', 'ts', 'tsx']
             }),
         ],
 

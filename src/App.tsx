@@ -10,7 +10,8 @@ import imgSvg from 'src/assets/icons/delete.svg';
 import {func2} from './someTs';
 
 const App:FC = () => {
-    const exp13323123: string = 'Текст из реакт-приложения123';
+    const exp13323123 = 'Текст из реакт-приложения123';
+    const baasd = 'adasda'; // чтобы ес линту было на что ругаться
 
     const abc5345345345 = (): void => console.log(0);
     abc5345345345();
