@@ -7,7 +7,7 @@ import imgJpg from 'src/assets/images/sea.jpg';
 import imgPng from 'src/assets/images/kisspng-flying-squirrel-bat-raccoon-rodent-gliding.png';
 import imgSvg from 'src/assets/icons/delete.svg';
 
-// import {func2} from './someTs';
+import {func2} from './someTs';
 
 const App:FC = () => {
     const exp13323123: string = 'Текст из реакт-приложения123';
@@ -15,7 +15,7 @@ const App:FC = () => {
     const abc5345345345 = (): void => console.log(0);
     abc5345345345();
 
-    // func2(333); // TODO разобраться, почему ТС ругается на типы
+    func2(333);
 
 
     return (

@@ -15,7 +15,7 @@ const getStyleLoader = ({isSASS}) => {
     const styleLoader = [
         MiniCSSExtractPlugin.loader,
         //позволяет вебпаку понимать импорты и импортировать ксс
-        'css-loader',
+        {loader: 'css-loader'},
         'postcss-loader'
     ]
     // если это sass, то добавляем опции хэширования имени класса и сасс-лоадер
@@ -23,30 +23,13 @@ const getStyleLoader = ({isSASS}) => {
         styleLoader[1].options = {
             modules: {
                 // в случае scss в сборку кладём селектор по хешу
-                localIdentName: '[local][hash:base64:4]'
+                localIdentName: '[local]_[hash:base64:4]'
             }
         }
         styleLoader.push('sass-loader');
     }
 
     return styleLoader;
-}
-
-const getBabelLoader = ({presetsArr}) => {
-    const babelLoaderConfig = {
-        loader: 'babel-loader',
-        options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-                '@babel/plugin-transform-runtime'
-            ]
-        }
-    }
-    if(presetsArr) {
-        babelLoaderConfig.options.presets.push(...presetsArr)
-    }
-
-    return babelLoaderConfig
 }
 
 module.exports = (env, argv) => {
@@ -105,11 +88,6 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.tsx?$/,
-                    use: 'ts-loader',
-                    exclude: /node_modules/,
-                },
-                {
                     test: /\.css$/,
                     use: getStyleLoader({isSASS: false}),
                 },
@@ -126,19 +104,9 @@ module.exports = (env, argv) => {
                     }
                 },
                 {
-                    test: /\.js$/,
+                    test: /\.(js|ts|tsx)$/,
                     exclude: /node_modules/,
-                    use: getBabelLoader({presetsArr: null})
-                },
-                {
-                    test: /.ts$/,
-                    exclude: /node_modules/,
-                    use: [getBabelLoader({presetsArr: ['@babel/preset-typescript']}), 'ts-loader']
-                },
-                {
-                    test: /.tsx$/,
-                    exclude: /node_modules/,
-                    use: [getBabelLoader({presetsArr: ['@babel/preset-react','@babel/preset-typescript']}), 'ts-loader']
+                    use: ['babel-loader', 'ts-loader']
                 },
             ]
         }
