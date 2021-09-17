@@ -1,3 +1,5 @@
+// todo разбить конфиг на ПРОД \ ДЕВ версии? и смёржить с общим для них вебпаков через webpack-merge
+
 const HTMLWebpackPlugin = require('html-webpack-plugin'); // создаёт нам хтмл файл на основе рукописного. с правильно подключенными импортами
 const {CleanWebpackPlugin} = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin'); // добавляет стили в отдельный файл, может добавлять кэши
@@ -17,7 +19,7 @@ const getStyleLoader = ({isSASS}) => {
 
     ]
     // если это sass, то добавляем опции хэширования имени класса и сасс-лоадер
-    if(isSASS) {
+    if (isSASS) {
         styleLoader[1].options = {
             modules: {
                 // в случае scss в сборку кладём селектор по хешу
@@ -28,6 +30,23 @@ const getStyleLoader = ({isSASS}) => {
     }
 
     return styleLoader;
+}
+
+const getBabelLoader = ({presetsArr}) => {
+    const babelLoaderConfig = {
+        loader: 'babel-loader',
+        options: {
+            presets: ['@babel/preset-env'],
+            plugins: [
+                '@babel/plugin-transform-runtime'
+            ]
+        }
+    }
+    if(presetsArr) {
+        babelLoaderConfig.options.presets.push(...presetsArr)
+    }
+
+    return babelLoaderConfig
 }
 
 module.exports = (env, argv) => {
@@ -102,8 +121,24 @@ module.exports = (env, argv) => {
                     test: /\.(png|jpg|svg|gif|ttf|woff|woff2|eot)/,
                     type: 'asset/resource',
                     generator: {
+                        // todo можно разбить по отдельным папкам. изображения. шрифты и т.д.
                         filename: `assets/${getFileName({isDev, extension: '[ext]'})}`
                     }
+                },
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    use: getBabelLoader({presetsArr: null})
+                },
+                {
+                    test: /.ts$/,
+                    exclude: /node_modules/,
+                    use: [getBabelLoader({presetsArr: ['@babel/preset-typescript']}), 'ts-loader']
+                },
+                {
+                    test: /.tsx$/,
+                    exclude: /node_modules/,
+                    use: [getBabelLoader({presetsArr: ['@babel/preset-react','@babel/preset-typescript']}), 'ts-loader']
                 },
             ]
         }

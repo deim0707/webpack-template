@@ -1,4 +1,4 @@
-import React from "react";
+import React, {FC} from "react";
 
 import style from './someScss.module.scss'
 import './someCss.css';
@@ -7,19 +7,27 @@ import imgJpg from 'src/assets/images/sea.jpg';
 import imgPng from 'src/assets/images/kisspng-flying-squirrel-bat-raccoon-rodent-gliding.png';
 import imgSvg from 'src/assets/icons/delete.svg';
 
-const App = () => {
-    const exp = 'Текст из реакт-приложения123';
+// import {func2} from './someTs';
+
+const App:FC = () => {
+    const exp13323123: string = 'Текст из реакт-приложения123';
+
+    const abc5345345345 = (): void => console.log(0);
+    abc5345345345();
+
+    // func2(333); // TODO разобраться, почему ТС ругается на типы
+
 
     return (
         <>
-            <p style={{width: '100%'}} className={style.par}>
+            <div style={{width: '100%'}} className={style.par}>
                 <h2>Заголовок</h2>
             <span style={{textAlign: 'center'}} className={`spa ${style.spa}`}>
-                {exp}
+                {exp13323123}
             </span>
                 <img src={imgJpg} alt="sea"/>
                 <img src={imgSvg} alt="sea"/>
-            </p>
+            </div>
             <img src={imgPng} alt=""/>
         </>
     )
