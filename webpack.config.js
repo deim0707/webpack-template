@@ -1,42 +1,42 @@
 // todo разбить конфиг на ПРОД \ ДЕВ версии? и смёржить с общим для них вебпаков через webpack-merge
 
 const HTMLWebpackPlugin = require('html-webpack-plugin'); // создаёт нам хтмл файл на основе рукописного. с правильно подключенными импортами
-const {CleanWebpackPlugin} = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // удаляет ненужные файлы (со старыми хешами)
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin'); // добавляет стили в отдельный файл, может добавлять кэши
 const ESLintPlugin = require('eslint-webpack-plugin');
-
 
 const path = require('path');
 
 // функци в зависимости от режиме разработки возвращает шаблон имени файла
 // например, хеши у файлов нам нужны только в режиме продакшен
-const getFileName = ({isDev, extension}) => isDev ? `[name].${extension}` : `[name].[contenthash:5].${extension}`;
+const getFileName = ({ isDev, extension }) =>
+    isDev ? `[name].${extension}` : `[name].[contenthash:5].${extension}`;
 
-const getStyleLoader = ({isSASS}) => {
+const getStyleLoader = ({ isSASS }) => {
     const styleLoader = [
         MiniCSSExtractPlugin.loader,
         //позволяет вебпаку понимать импорты и импортировать ксс
-        {loader: 'css-loader'},
-        'postcss-loader'
-    ]
+        { loader: 'css-loader' },
+        'postcss-loader',
+    ];
     // если это sass, то добавляем опции хэширования имени класса и сасс-лоадер
     if (isSASS) {
         styleLoader[1].options = {
             modules: {
                 // в случае scss в сборку кладём селектор по хешу
-                localIdentName: '[local]_[hash:base64:4]'
-            }
-        }
+                localIdentName: '[local]_[hash:base64:4]',
+            },
+        };
         styleLoader.push('sass-loader');
     }
 
     return styleLoader;
-}
+};
 
 module.exports = (env, argv) => {
     const isDev = argv.mode === 'development';
     const isProduction = !isDev;
-    console.log({isDev, isProduction})
+    console.log({ isDev, isProduction });
 
     return {
         // указываем, где лежат все исходники с которыми работает вебпак
@@ -51,7 +51,7 @@ module.exports = (env, argv) => {
 
         // куда кладём результат работы вебпака
         output: {
-            filename: getFileName({isDev, extension: 'js'}),
+            filename: getFileName({ isDev, extension: 'js' }),
             path: path.resolve(__dirname, 'dist'),
         },
 
@@ -64,28 +64,28 @@ module.exports = (env, argv) => {
             extensions: ['.tsx', '.ts', '.js'],
             // помогает избавиться от большой вложенности в импорте. например, когда стоят много '../../../../../src/Post.js'. теперь мы сможем написать import Post from "src/Post"
             alias: {
-                'src': path.resolve(__dirname, 'src'),
-            }
+                src: path.resolve(__dirname, 'src'),
+            },
         },
 
         // каждый плагин это экземпляр классов. добавляем их через NEW
         plugins: [
             new HTMLWebpackPlugin({
                 // template - указали на основе какого хтмл файла ему работать
-                template: "./index.html",
+                template: './index.html',
                 // минифицируем хтмл
                 minify: {
                     // хтмл в одну строку
                     collapseWhitespace: isProduction,
-                }
+                },
             }),
             new CleanWebpackPlugin(),
             // выносит ксс в отдельный файл
             new MiniCSSExtractPlugin({
-                filename: getFileName({isDev, extension: 'css'}),
+                filename: getFileName({ isDev, extension: 'css' }),
             }),
             new ESLintPlugin({
-                extensions: ['js', 'ts', 'tsx']
+                extensions: ['js', 'ts', 'tsx'],
             }),
         ],
 
@@ -93,27 +93,29 @@ module.exports = (env, argv) => {
             rules: [
                 {
                     test: /\.css$/,
-                    use: getStyleLoader({isSASS: false}),
+                    use: getStyleLoader({ isSASS: false }),
                 },
                 {
                     test: /\.s[ac]ss$/,
-                    use: getStyleLoader({isSASS: true}),
+                    use: getStyleLoader({ isSASS: true }),
                 },
                 {
                     test: /\.(png|jpg|svg|gif|ttf|woff|woff2|eot)/,
                     type: 'asset/resource',
                     generator: {
                         // todo можно разбить по отдельным папкам. изображения. шрифты и т.д.
-                        filename: `assets/${getFileName({isDev, extension: '[ext]'})}`
-                    }
+                        filename: `assets/${getFileName({
+                            isDev,
+                            extension: '[ext]',
+                        })}`,
+                    },
                 },
                 {
                     test: /\.(js|ts|tsx)$/,
                     exclude: /node_modules/,
-                    use: ['babel-loader', 'ts-loader']
+                    use: ['babel-loader', 'ts-loader'],
                 },
-            ]
-        }
-
-    }
-}
+            ],
+        },
+    };
+};
