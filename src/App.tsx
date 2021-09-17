@@ -22,6 +22,7 @@ const App:FC = () => {
         <>
             <div style={{width: '100%'}} className={style.par}>
                 <h2>Заголовок</h2>
+                <input type="text" placeholder='плейсхолдер'/>
             <span style={{textAlign: 'center'}} className={`spa ${style.spa}`}>
                 {exp13323123}
             </span>

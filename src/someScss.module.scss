@@ -4,6 +4,11 @@ $textColor: yellow;
   display: flex;
   justify-content: center;
   font-family: 'PTSans', sans-serif;
+
+  input::placeholder {
+    color: red;
+  }
+
   .spa {
     color: $textColor;
     font-family: 'OfficinaSerifBoldC', sans-serif;

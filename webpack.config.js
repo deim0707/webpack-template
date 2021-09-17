@@ -15,8 +15,8 @@ const getStyleLoader = ({isSASS}) => {
     const styleLoader = [
         MiniCSSExtractPlugin.loader,
         //позволяет вебпаку понимать импорты и импортировать ксс
-        {loader: 'css-loader'},
-
+        'css-loader',
+        'postcss-loader'
     ]
     // если это sass, то добавляем опции хэширования имени класса и сасс-лоадер
     if (isSASS) {
