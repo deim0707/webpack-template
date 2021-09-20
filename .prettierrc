@@ -1,5 +1,6 @@
 {
   "tabWidth": 4,
   "singleQuote": true,
-  "htmlWhitespaceSensitivity": "strict"
+  "htmlWhitespaceSensitivity": "strict",
+  "jsxSingleQuote": true
 }

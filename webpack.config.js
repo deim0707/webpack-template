@@ -10,7 +10,7 @@ const path = require('path');
 // функци в зависимости от режиме разработки возвращает шаблон имени файла
 // например, хеши у файлов нам нужны только в режиме продакшен
 const getFileName = ({ isDev, extension }) =>
-    isDev ? `[name].${extension}` : `[name].[contenthash:5].${extension}`;
+    isDev ? `[name]${extension}` : `[name].[contenthash:5]${extension}`;
 
 const getStyleLoader = ({ isSASS }) => {
     const styleLoader = [
@@ -51,7 +51,7 @@ module.exports = (env, argv) => {
 
         // куда кладём результат работы вебпака
         output: {
-            filename: getFileName({ isDev, extension: 'js' }),
+            filename: getFileName({ isDev, extension: '.js' }),
             path: path.resolve(__dirname, 'dist'),
         },
 
@@ -82,7 +82,7 @@ module.exports = (env, argv) => {
             new CleanWebpackPlugin(),
             // выносит ксс в отдельный файл
             new MiniCSSExtractPlugin({
-                filename: getFileName({ isDev, extension: 'css' }),
+                filename: getFileName({ isDev, extension: '.css' }),
             }),
             new ESLintPlugin({
                 extensions: ['js', 'ts', 'tsx'],
@@ -100,7 +100,26 @@ module.exports = (env, argv) => {
                     use: getStyleLoader({ isSASS: true }),
                 },
                 {
-                    test: /\.(png|jpg|svg|gif|ttf|woff|woff2|eot)/,
+                    // todo хорошо бы попытаться избавить здесь от file-loader, но оставить возможность работать с свг как с компонентом или урл
+                    test: /\.svg$/,
+                    use: [
+                        {
+                            loader: '@svgr/webpack',
+                        },
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: `assets/${getFileName({
+                                    isDev,
+                                    extension: '.svg',
+                                })}`,
+                            },
+                        },
+                    ],
+                    type: 'javascript/auto',
+                },
+                {
+                    test: /\.(png|jpg|gif|ttf|woff|woff2|eot)/,
                     type: 'asset/resource',
                     generator: {
                         // todo можно разбить по отдельным папкам. изображения. шрифты и т.д.
