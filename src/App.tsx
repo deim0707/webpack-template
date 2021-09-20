@@ -12,8 +12,8 @@ import imgSvg, {
 import { func2 } from './someTs';
 
 const App: FC = () => {
-    const exp13323123 = 'Текст из реакт-приложения123';
-    const baasd = 'adasda'; // чтобы ес линту было на что ругаться
+    const exp13323123 = 'Текст из реакт-приложения1234567';
+    // const baasd = 'adasda'; // чтобы ес линту было на что ругаться
 
     const abc5345345345 = (): void => console.log(0);
     abc5345345345();
