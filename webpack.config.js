@@ -78,6 +78,7 @@ module.exports = (env, argv) => {
                     // хтмл в одну строку
                     collapseWhitespace: isProduction,
                 },
+                favicon: './assets/favicon.ico',
             }),
             new CleanWebpackPlugin(),
             // выносит ксс в отдельный файл
